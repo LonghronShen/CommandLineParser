@@ -5,7 +5,7 @@ namespace CommandLineParser.Compatibility;
 
 public static class TypeExtensions
 {
-#if NET35
+#if NET35 || NET40
     // https://github.com/castleproject/Core/blob/netcore/src/Castle.Core/Compatibility/IntrospectionExtensions.cs
     // This allows us to use the new reflection API which separates Type and TypeInfo
     // while still supporting .NET 3.5 and 4.0. This class matches the API of the same
