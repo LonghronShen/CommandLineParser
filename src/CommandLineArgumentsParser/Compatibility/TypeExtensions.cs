@@ -5,19 +5,19 @@ namespace CommandLineParser.Compatibility;
 
 public static class TypeExtensions
 {
-#if NET20 || NET35 || NET40
-        // https://github.com/castleproject/Core/blob/netcore/src/Castle.Core/Compatibility/IntrospectionExtensions.cs
-        // This allows us to use the new reflection API which separates Type and TypeInfo
-        // while still supporting .NET 3.5 and 4.0. This class matches the API of the same
-        // class in .NET 4.5+, and so is only needed on .NET Framework versions before that.
-        //
-        // Return the System.Type for now, we will probably need to create a TypeInfo class
-        // which inherits from Type like .NET 4.5+ and implement the additional methods and
-        // properties.
-        public static Type GetTypeInfo(this Type type)
-        {
-            return type;
-        }
+#if NET35
+    // https://github.com/castleproject/Core/blob/netcore/src/Castle.Core/Compatibility/IntrospectionExtensions.cs
+    // This allows us to use the new reflection API which separates Type and TypeInfo
+    // while still supporting .NET 3.5 and 4.0. This class matches the API of the same
+    // class in .NET 4.5+, and so is only needed on .NET Framework versions before that.
+    //
+    // Return the System.Type for now, we will probably need to create a TypeInfo class
+    // which inherits from Type like .NET 4.5+ and implement the additional methods and
+    // properties.
+    public static Type GetTypeInfo(this Type type)
+    {
+        return type;
+    }
 #endif
 
     public static T? GetPropertyValue<T>(this Type type, string propertyName, object target)
@@ -36,7 +36,7 @@ public static class TypeExtensions
         var property = GetMember(type.GetTypeInfo(), propertyName, (ti, n) => ti.GetDeclaredProperty(n));
         property?.SetValue(target, value);
 #else
-        type.InvokeMember(propertyName, BindingFlags.SetProperty, null, target, new [] { value });
+        type.InvokeMember(propertyName, BindingFlags.SetProperty, null, target, new[] { value });
 #endif
     }
 
@@ -53,7 +53,7 @@ public static class TypeExtensions
             type.SetPropertyValue(fieldName, target, value);
         }
 #else
-        type.InvokeMember(fieldName, BindingFlags.SetField | BindingFlags.SetProperty, null, target, new [] { value });
+        type.InvokeMember(fieldName, BindingFlags.SetField | BindingFlags.SetProperty, null, target, new[] { value });
 #endif
     }
 
